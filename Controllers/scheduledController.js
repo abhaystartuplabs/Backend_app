@@ -22,10 +22,15 @@ exports.createPost = async (req, res) => {
                 message: "Image URL & schedule time are required"
             });
 
+        // Convert scheduleTime from local (browser) to UTC
+        const scheduleTimeUTC = new Date(scheduleTime);
+        // If your input is "2025-11-18T13:05" (local), JS Date treats it as local, so to store UTC:
+        const scheduleTimeToSave = new Date(scheduleTimeUTC.getTime() - scheduleTimeUTC.getTimezoneOffset() * 60000);
+
         const post = await ScheduledPost.create({
             imageUrl,
             caption,
-            scheduleTime,
+            scheduleTime: scheduleTimeToSave,
             instagramBusinessId,
             accessToken
         });
@@ -35,6 +40,7 @@ exports.createPost = async (req, res) => {
         res.status(500).json({ success: false, message: "Failed to create scheduled post" });
     }
 };
+
 
 
 // PATCH: Publish immediately
