@@ -21,9 +21,9 @@ exports.createPost = async (req, res) => {
         if (!imageUrl || !scheduleTime)
             return res.status(400).json({ success: false, message: "Image URL & schedule time are required" });
 
-        // Convert local browser time (IST) to UTC
-        const localDate = new Date(scheduleTime); // input from <input type="datetime-local"> is IST
-        const scheduleTimeUTC = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
+        // Convert IST string from browser to UTC
+        const istDate = new Date(scheduleTime); // user picks in IST
+        const scheduleTimeUTC = new Date(istDate.getTime() - (5.5 * 60 * 60 * 1000)); // IST → UTC
 
         const post = await ScheduledPost.create({
             imageUrl,

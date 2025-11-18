@@ -3,14 +3,16 @@ const cron = require("node-cron");
 const ScheduledPost = require("../Models/ScheduledPost");
 const publishToInstagram = require("../Services/instagramService");
 
-cron.schedule("* * * * *", async () => { // runs every minute
+cron.schedule("* * * * *", async () => {
   console.log("⏳ Checking scheduled posts...");
 
-  const now = new Date(); // UTC
+  const now = new Date(); // server UTC time
+  // Convert now to IST
+  const nowIST = new Date(now.getTime() + (5.5 * 60 * 60 * 1000));
 
   const posts = await ScheduledPost.find({
     status: "PENDING",
-    scheduleTime: { $lte: now }
+    scheduleTime: { $lte: now } // DB stored in UTC
   });
 
   if (posts.length === 0) return;
