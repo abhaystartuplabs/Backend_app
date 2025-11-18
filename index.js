@@ -11,11 +11,12 @@ require('./cron/cron.js')
 require('./cron/scheduler.js')
 
 /* Handling cors problem */
-app.use(cors({
-    origin: 'https://social-app-sigma-lovat.vercel.app',
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-}));
+app.use(cors());
+// app.use(cors({
+//     origin: 'https://social-app-sigma-lovat.vercel.app',
+//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+// }));
 
 
 // app.use(cors());
