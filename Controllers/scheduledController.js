@@ -17,29 +17,28 @@ exports.createPost = async (req, res) => {
         const { imageUrl, caption, scheduleTime, instagramBusinessId, accessToken } = req.body;
 
         if (!imageUrl || !scheduleTime)
-            return res.status(400).json({
-                success: false,
-                message: "Image URL & schedule time are required"
-            });
+            return res.status(400).json({ success: false, message: "Image URL & schedule time are required" });
 
-        // Convert scheduleTime from local (browser) to UTC
-        const scheduleTimeUTC = new Date(scheduleTime);
-        // If your input is "2025-11-18T13:05" (local), JS Date treats it as local, so to store UTC:
-        const scheduleTimeToSave = new Date(scheduleTimeUTC.getTime() - scheduleTimeUTC.getTimezoneOffset() * 60000);
+        // Convert local browser time to UTC
+        const localDate = new Date(scheduleTime); // browser sends local time
+        const scheduleTimeUTC = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
 
         const post = await ScheduledPost.create({
             imageUrl,
             caption,
-            scheduleTime: scheduleTimeToSave,
+            scheduleTime: scheduleTimeUTC,
             instagramBusinessId,
-            accessToken
+            accessToken,
+            status: "PENDING",
         });
 
         res.json({ success: true, post });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ success: false, message: "Failed to create scheduled post" });
     }
 };
+
 
 
 
