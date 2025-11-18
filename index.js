@@ -1,14 +1,14 @@
 const express = require("express");
-const userRoutes = require("./Routes/userRoutes");
-const scheduledRoutes = require("./Routes/scheduledRoutes");
+const userRoutes = require("./Routes/userRoutes.js");
+const scheduledRoutes = require("./Routes/scheduledRoutes.js");
 // const gmbRoutes = require("./Routes/gmbRoutes");
 const app = express();
 require('dotenv').config(); 
 const PORT = process.env.PORT || 8000;
-const connectToDb = require("./Config/db");
+const connectToDb = require("./Config/db.js");
 const cors = require('cors');
 require('./cron/cron.js')
-require('./cron/scheduler')
+require('./cron/scheduler.js')
 
 /* Handling cors problem */
 app.use(cors({
