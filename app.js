@@ -12,7 +12,7 @@ require('./cron/scheduler')
 
 /* Handling cors problem */
 app.use(cors({
-    origin: '*',
+    origin: 'https://backend-app-nu-ebon.vercel.app',
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
 }));
