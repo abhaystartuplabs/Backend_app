@@ -1,17 +1,19 @@
+// controllers/scheduleController.js
 const ScheduledPost = require("../Models/ScheduledPost");
 const publishToInstagram = require("../Services/instagramService");
 
-// GET: Fetch all scheduled posts
+// GET: fetch all scheduled posts
 exports.getPosts = async (req, res) => {
     try {
         const posts = await ScheduledPost.find().sort({ scheduleTime: 1 });
         res.json({ success: true, posts });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ success: false, message: "Failed to fetch posts" });
     }
 };
 
-// POST: Create scheduled post
+// POST: create scheduled post
 exports.createPost = async (req, res) => {
     try {
         const { imageUrl, caption, scheduleTime, instagramBusinessId, accessToken } = req.body;
@@ -19,8 +21,8 @@ exports.createPost = async (req, res) => {
         if (!imageUrl || !scheduleTime)
             return res.status(400).json({ success: false, message: "Image URL & schedule time are required" });
 
-        // Convert local browser time to UTC
-        const localDate = new Date(scheduleTime); // browser sends local time
+        // Convert local browser time (IST) to UTC
+        const localDate = new Date(scheduleTime); // input from <input type="datetime-local"> is IST
         const scheduleTimeUTC = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
 
         const post = await ScheduledPost.create({
@@ -39,17 +41,12 @@ exports.createPost = async (req, res) => {
     }
 };
 
-
-
-
-// PATCH: Publish immediately
+// PATCH: publish immediately
 exports.publishNow = async (req, res) => {
     try {
         const { postId } = req.body;
-
         const post = await ScheduledPost.findById(postId);
-        if (!post)
-            return res.status(404).json({ success: false, message: "Post not found" });
+        if (!post) return res.status(404).json({ success: false, message: "Post not found" });
 
         const result = await publishToInstagram(
             post.instagramBusinessId,
@@ -72,23 +69,20 @@ exports.publishNow = async (req, res) => {
         res.json({ success: true, post });
 
     } catch (err) {
+        console.error(err);
         res.status(500).json({ success: false, message: "Internal error during publishing" });
     }
 };
 
-
-// DELETE: Remove scheduled post
+// DELETE: remove scheduled post
 exports.deletePost = async (req, res) => {
     try {
         const { postId } = req.body;
-
         const deleted = await ScheduledPost.findByIdAndDelete(postId);
-
-        if (!deleted)
-            return res.status(404).json({ success: false, message: "Post not found" });
-
+        if (!deleted) return res.status(404).json({ success: false, message: "Post not found" });
         res.json({ success: true, message: "Post deleted" });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ success: false, message: "Failed to delete post" });
     }
 };

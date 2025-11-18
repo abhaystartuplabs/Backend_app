@@ -1,3 +1,4 @@
+// cron/scheduler.js
 const cron = require("node-cron");
 const ScheduledPost = require("../Models/ScheduledPost");
 const publishToInstagram = require("../Services/instagramService");
@@ -5,7 +6,7 @@ const publishToInstagram = require("../Services/instagramService");
 cron.schedule("* * * * *", async () => { // runs every minute
   console.log("⏳ Checking scheduled posts...");
 
-  const now = new Date();
+  const now = new Date(); // UTC
 
   const posts = await ScheduledPost.find({
     status: "PENDING",

@@ -1,3 +1,4 @@
+// models/ScheduledPost.js
 const mongoose = require("mongoose");
 
 const ScheduledPostSchema = new mongoose.Schema({
