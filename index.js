@@ -7,19 +7,11 @@ require('dotenv').config();
 const PORT = process.env.PORT || 8000;
 const connectToDb = require("./Config/db.js");
 const cors = require('cors');
-require('./cron/cron.js')
 require('./cron/scheduler.js')
 
 /* Handling cors problem */
 app.use(cors());
-// app.use(cors({
-//     origin: 'https://social-app-sigma-lovat.vercel.app',
-//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-//     allowedHeaders: ["Content-Type", "Authorization"],
-// }));
 
-
-// app.use(cors());
 app.use(express.json()); // Use express.json() instead of bodyParser.json()
 
 
@@ -30,10 +22,6 @@ app.get("/", (req, res) => {
 app.use("/api/users", userRoutes);
 // app.use("/api/gmb", gmbRoutes);
 app.use("/api/schedule", scheduledRoutes);
-
-app.get("/api/test", (req, res) => {
-  res.send({ message: "Backend running successfully" });
-});
 
 
 connectToDb();
