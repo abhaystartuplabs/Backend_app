@@ -12,7 +12,9 @@ require('./cron/scheduler.js')
 
 /* Handling cors problem */
 app.use(cors());
+
 app.use("/Public", express.static(path.join(__dirname, "Public")));
+
 app.use(express.json()); // Use express.json() instead of bodyParser.json()
 
 
