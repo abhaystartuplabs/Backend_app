@@ -23,6 +23,8 @@ app.use((req, res, next) => {
   next();
 });
 
+console.log("Ok")
+
 app.get("/", (req, res) => {
   res.send("Server is running 🔥");
 });
