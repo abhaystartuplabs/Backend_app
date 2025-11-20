@@ -17,6 +17,11 @@ app.use("/Public", express.static(path.join(__dirname, "Public")));
 
 app.use(express.json()); // Use express.json() instead of bodyParser.json()
 
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
 
 app.get("/", (req, res) => {
   res.send("Server is running 🔥");
